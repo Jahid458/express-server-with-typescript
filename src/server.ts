@@ -49,6 +49,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello next level Developers");
 });
 
+// user route
 app.post("/users", async (req: Request, res: Response) => {
   const { name, email } = req.body;
 
@@ -75,6 +76,25 @@ app.post("/users", async (req: Request, res: Response) => {
     success: true,
     message: "APi Is working fine",
   });
+});
+
+
+// all users
+app.get("/users", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`SELECT * FROM users`);
+    res.status(200).json({
+      success: true,
+      message: "user retrieved successfully",
+      data: result.rows,
+    });
+  } catch (err: any) {    
+      res.status(500).json({
+      success: false,
+      message: err.message,
+      details: err
+    });
+  } 
 });
 
 app.listen(port, () => {
