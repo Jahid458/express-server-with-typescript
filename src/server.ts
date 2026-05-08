@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { Pool } from "pg";
 import dotenv from "dotenv";
 import path from "path";
@@ -45,7 +45,14 @@ CREATE TABLE IF NOT EXISTS todos(
 
 initDB();
 
-app.get("/", (req: Request, res: Response) => {
+// logger middleware
+
+const logger = (req:Request,res:Response,next:NextFunction) => {
+  console.log(`[${new Date().toISOString()}]  ${req.method} ${req.path}`)
+  next();
+}
+
+app.get("/", logger, (req: Request, res: Response) => {
   res.send("Hello next level Developers");
 });
 
@@ -223,6 +230,15 @@ app.get("/todos", async (req: Request, res: Response) => {
     });
   }
 });
+
+
+app.use((req,res) => {
+  res.status(404).json({
+    success: false,
+    message: 'Route Not Found',
+    path: req.path
+  })
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
