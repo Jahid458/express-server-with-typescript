@@ -153,13 +153,6 @@ app.put("/users/:id", async (req: Request, res: Response) => {
   }
 });
 
-
-
-
-
-
-
-
 app.delete("/users/:id", async (req: Request, res: Response) => {
   // console.log(req.params.id);
   try {
@@ -167,7 +160,7 @@ app.delete("/users/:id", async (req: Request, res: Response) => {
       req.params.id,
     ]);
 
-    console.log(result)
+    console.log(result);
     if (result.rowCount === 0) {
       res.status(404).json({
         success: false,
@@ -180,6 +173,48 @@ app.delete("/users/:id", async (req: Request, res: Response) => {
         data: result.rows,
       });
     }
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+      details: err,
+    });
+  }
+});
+
+// todo crud
+
+// create todo
+app.post("/todos", async (req: Request, res: Response) => {
+  const { user_id, title } = req.body;
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO todos (user_id, title) VALUES ($1, $2) RETURNING *`,
+      [user_id, title],
+    );
+    res.status(201).json({
+      success: true,
+      message: "Todo created successfully",
+      data: result.rows[0],
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
+//get todos
+app.get("/todos", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`SELECT * FROM todos`);
+    res.status(200).json({
+      success: true,
+      message: "todos retrieved successfully",
+      data: result.rows,
+    });
   } catch (err: any) {
     res.status(500).json({
       success: false,
