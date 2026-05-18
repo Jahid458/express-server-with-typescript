@@ -4,11 +4,16 @@ import { userControllers } from "./user.controller";
 
 const router = express.Router();
 
-// app.use("/users", userRoutes)
 // route --> controller --> service
 
 router.post("/", userControllers.createUser);
+
 router.get("/", userControllers.getUser);
-router.get('/:id', userControllers.getSingleUser)
+
+router.get("/:id", userControllers.getSingleUser);
+
+router.put("/:id", userControllers.updateUser);
+
+router.delete("/:id", userControllers.DeleteUser);
 
 export const userRoutes = router;
