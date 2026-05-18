@@ -15,7 +15,8 @@ app.use(express.json());
 // app.use(express.urlencoded());
 
 // initializing DB
-initDB();
+initDB()
+
 
 // logger middleware
 
