@@ -1,10 +1,11 @@
-import express, {  Request, Response } from "express";
+import express, { Request, Response } from "express";
 
 import config from "./config";
 import initDB from "./config/db";
 import logger from "./middleware/logger";
 import { userRoutes } from "./modules/user/user.route";
 import { TodoRoutes } from "./modules/todo/todo.route";
+import { authRoutes } from "./modules/auth/auth.route";
 
 const app = express();
 const port = config.port;
@@ -24,6 +25,8 @@ app.get("/", logger, (req: Request, res: Response) => {
 
 app.use("/users", userRoutes);
 app.use("/todos", TodoRoutes);
+// auth
+app.use("/auth", authRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
