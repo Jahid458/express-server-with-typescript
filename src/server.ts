@@ -1,9 +1,10 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, {  Request, Response } from "express";
 
 import config from "./config";
-import initDB, { pool } from "./config/db";
+import initDB from "./config/db";
 import logger from "./middleware/logger";
 import { userRoutes } from "./modules/user/user.route";
+import { TodoRoutes } from "./modules/todo/todo.route";
 
 const app = express();
 const port = config.port;
@@ -21,52 +22,8 @@ app.get("/", logger, (req: Request, res: Response) => {
   res.send("Hello next level Developers");
 });
 
-// users CRUD
-
 app.use("/users", userRoutes);
-
-
-
-
-// create todo
-app.post("/todos", async (req: Request, res: Response) => {
-  const { user_id, title } = req.body;
-
-  try {
-    const result = await pool.query(
-      `INSERT INTO todos (user_id, title) VALUES ($1, $2) RETURNING *`,
-      [user_id, title],
-    );
-    res.status(201).json({
-      success: true,
-      message: "Todo created successfully",
-      data: result.rows[0],
-    });
-  } catch (err: any) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
-  }
-});
-
-//get todos
-app.get("/todos", async (req: Request, res: Response) => {
-  try {
-    const result = await pool.query(`SELECT * FROM todos`);
-    res.status(200).json({
-      success: true,
-      message: "todos retrieved successfully",
-      data: result.rows,
-    });
-  } catch (err: any) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-      details: err,
-    });
-  }
-});
+app.use("/todos", TodoRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
