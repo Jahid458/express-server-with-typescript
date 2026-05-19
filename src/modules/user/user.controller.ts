@@ -3,7 +3,6 @@ import { pool } from "../../config/db";
 import { userServices } from "./user.service";
 
 const createUser = async (req: Request, res: Response) => {
-  
   try {
     const result = await userServices.createUser(req.body);
 
@@ -74,7 +73,11 @@ const updateUser = async (req: Request, res: Response) => {
 
   const { name, email } = req.body;
   try {
-    const result = await userServices.updateUser(name, email, req.params.id as string)
+    const result = await userServices.updateUser(
+      name,
+      email,
+      req.params.id as string,
+    );
     if (result.rows.length === 0) {
       res.status(404).json({
         success: false,
@@ -94,12 +97,12 @@ const updateUser = async (req: Request, res: Response) => {
       details: err,
     });
   }
-}
+};
 
 const DeleteUser = async (req: Request, res: Response) => {
   // console.log(req.params.id);
   try {
-    const result =await userServices.deleteUser(req.params.id as string);
+    const result = await userServices.deleteUser(req.params.id as string);
 
     console.log(result);
     if (result.rowCount === 0) {
@@ -121,12 +124,12 @@ const DeleteUser = async (req: Request, res: Response) => {
       details: err,
     });
   }
-}
+};
 
 export const userControllers = {
   createUser,
   getUser,
   getSingleUser,
   updateUser,
-  DeleteUser
+  DeleteUser,
 };
