@@ -15,16 +15,17 @@ const auth = (...roles: string[]) => {
         });
       }
 
-      const decoded = jwt.verify(token, config.jwtSecret as string) as JwtPayload;
+      const decoded = jwt.verify(
+        token,
+        config.jwtSecret as string,
+      ) as JwtPayload;
       console.log({ decoded });
-      req.user = decoded ;
+      req.user = decoded;
 
-
-      if(roles.length && !roles.includes(decoded.role as string)){
+      if (roles.length && !roles.includes(decoded.role as string)) {
         return res.status(500).json({
-          error: 'Unauthorized!!!',
-
-        })
+          error: "Unauthorized!!!",
+        });
       }
       next();
     } catch (err: any) {
