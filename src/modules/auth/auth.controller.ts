@@ -10,7 +10,7 @@ const loginUser = async(req:Request, res:Response) => {
     
         res.status(201).json({
           success: "Login Succesfully",
-          data: result,
+          data: result
         });
       } catch (err: any) {
         res.status(500).json({
@@ -18,8 +18,6 @@ const loginUser = async(req:Request, res:Response) => {
           message: err.message,
         });
       }
-    
-    
 }
 
 export const authController = {
